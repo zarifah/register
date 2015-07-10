@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<style>
+		div#reg
+		{
+			background: pink;
+			height: 180px;
+			width:150px;
+			
+		}
+		form#foto
+		{
+			position:  absolute;
+			top : 40px;
+			right :50px;
+		}	
+	</style>
+
+	<script type="text/javascript" charset="utf-8" src="cordova.js"></script>
+<script>
+function pageReady()
+{
+	document.addEventListener("deviceready",initPage,false);
+}
+
+function initPage()
+{
+	document.getElementById("status").innerHTML = "Page ready";
+}
+
+function startCam()
+{
+	navigator.camera.getPicture(displayPic,errorPic,{quality:70,destinationType: Camera.DestinationType.DATA_URL});
+}
+
+function displayPic(imageURL)
+{
+	document.getElementById("pix").src = "data:image/jpeg;base64," + imageURL;
+}
+
+function errorPic()
+{
+}
+
+	<script type="text/javascript">
+ 
+      function fileSelected() {
+ 
+        var count = document.getElementById('fileToUpload').files.length;
+ 
+              document.getElementById('details').innerHTML = "";
+ 
+              for (var index = 0; index < count; index ++)
+ 
+              {
+ 
+                     var file = document.getElementById('fileToUpload').files[index];
+ 
+                     var fileSize = 0;
+ 
+                     if (file.size > 1024 * 1024)
+ 
+                            fileSize = (Math.round(file.size * 100 / (1024 * 1024)) / 100).toString() + 'MB';
+ 
+                     else
+ 
+                            fileSize = (Math.round(file.size * 100 / 1024) / 100).toString() + 'KB';
+ 
+                     document.getElementById('details').innerHTML += 'Name: ' + file.name + '<br>Size: ' + fileSize + '<br>Type: ' + file.type;
+ 
+                     document.getElementById('details').innerHTML += '<p>';
+ 
+              }
+ 
+      }
+ 
+      function uploadFile() {
+ 
+        var fd = new FormData();
+ 
+              var count = document.getElementById('fileToUpload').files.length;
+ 
+              for (var index = 0; index < count; index ++)
+ 
+              {
+ 
+                     var file = document.getElementById('fileToUpload').files[index];
+ 
+                     fd.append(file.name, file);
+ 
+              }
+ 
+        var xhr = new XMLHttpRequest();
+ 
+        xhr.upload.addEventListener("progress", uploadProgress, false);
+ 
+        xhr.addEventListener("load", uploadComplete, false);
+ 
+        xhr.addEventListener("error", uploadFailed, false);
+ 
+        xhr.addEventListener("abort", uploadCanceled, false);
+ 
+        xhr.open("POST", "savetofile.aspx");
+ 
+        xhr.send(fd);
+ 
+      }
+ 
+      function uploadProgress(evt) {
+ 
+        if (evt.lengthComputable) {
+ 
+          var percentComplete = Math.round(evt.loaded * 100 / evt.total);
+ 
+          document.getElementById('progress').innerHTML = percentComplete.toString() + '%';
+ 
+        }
+ 
+        else {
+ 
+          document.getElementById('progress').innerHTML = 'unable to compute';
+ 
+        }
+ 
+      }
+ 
+      function uploadComplete(evt) {
+ 
+        /* This event is raised when the server send back a response */
+ 
+        alert(evt.target.responseText);
+ 
+      }
+ 
+      function uploadFailed(evt) {
+ 
+        alert("There was an error attempting to upload the file.");
+ 
+      }
+ 
+      function uploadCanceled(evt) {
+ 
+        alert("The upload has been canceled by the user or the browser dropped the connection.");
+ 
+      }
+ 
+    </script>
+</head>
+
+<body onload="pageReady()">
+
+	<div id="reg"></div>
+	
+	<form id="foto" enctype="multipart/form-data" method="post" action="Upload.aspx">
+
+    <div>
+      <label for="fileToUpload">Take or select photo(s)</label><br />
+	  <h1 id="status"></h1>
+<input type="button" onclick="startCam()" value="TAKE PHOTO" /><br/>
+
+      <input type="file" name="fileToUpload" id="fileToUpload" onchange="fileSelected();" accept="image/*" capture="camera" />
+    </div>
+	
+ 
+    <div id="details"></div>
+ 
+    <div id="progress"></div>
+	</form>
+	
+	<br />
+	<table id="ver">
+    <tr>
+        <td>
+           Name:
+        </td>
+        <td>
+            <input type="text" name="firstname" placeholder="Ex: adam & hawa" required/>
+        </td>
+    </tr>
+	
+	<tr>
+        <td>
+            Email:
+        </td>
+        <td>
+            <input type="email" name="email" placeholder="Ex: adam@hawa.com" required />
+        </td>
+    </tr>
+	</table>
+	<br />
+	<input type="button" value="REGISTER"	/>
+	
+</body>
+</html>
